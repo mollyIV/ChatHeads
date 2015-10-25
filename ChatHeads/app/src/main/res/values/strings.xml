@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Global -->
+    <string name="app_name">Chat heads</string>
+
+    <!-- Preferences -->
+    <string name="serviceEnabledKey">serviceEnabledKey</string>
+    <string name="title">Head service enabled</string>
+    <string name="summary">It allows to enable or disable the head service.</string>
+
+    <!-- Notification -->
+    <string name="notificationTitle">Head service</string>
+    <string name="notificationText">Tap to configure.</string>
+
+</resources>
