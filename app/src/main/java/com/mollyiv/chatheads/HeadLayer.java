@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 /**
  * Creates the head layer view which is displayed directly on window manager.
@@ -29,7 +31,7 @@ public class HeadLayer extends View {
     }
 
     private void addToWindowManager() {
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
@@ -44,6 +46,39 @@ public class HeadLayer extends View {
 
         // Here is the place where you can inject whatever layout you want.
         layoutInflater.inflate(R.layout.head, mFrameLayout);
+
+        // Support dragging the image view
+        final ImageView imageView = (ImageView) mFrameLayout.findViewById(R.id.imageView);
+        imageView.setOnTouchListener(new OnTouchListener() {
+            private int initX, initY;
+            private int initTouchX, initTouchY;
+
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                int x = (int)event.getRawX();
+                int y = (int)event.getRawY();
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initX = params.x;
+                        initY = params.y;
+                        initTouchX = x;
+                        initTouchY = y;
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        params.x = initX + (x - initTouchX);
+                        params.y = initY + (y - initTouchY);
+
+                        // Invalidate layout
+                        mWindowManager.updateViewLayout(mFrameLayout, params);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
